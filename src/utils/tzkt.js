@@ -24,3 +24,20 @@ export const fetchLocked = async (contract_address) => {
     const res = await axios.get("https://api.jakartanet.tzkt.io/v1/contracts/"+ contract_address +"/storage");
     return res.data.lockedClustors;
 }
+
+export const fetchTokenMetaData = async (token_address) => {
+    const res = await axios.get("https://api.jakartanet.tzkt.io/v1/contracts/"+ token_address +"/bigmaps/token_metadata/keys/0/");
+    return jugaad(res.data.value.token_info.decimals);
+}
+
+const jugaad = (num) => {
+    if(num.length === 2){
+        return parseInt(num) - 30;
+    }
+    else if(num.length === 4){
+        return parseInt(num) - 3120;     
+    }
+    else {
+        return 1;    
+    } 
+}

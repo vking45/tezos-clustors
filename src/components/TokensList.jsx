@@ -1,7 +1,7 @@
 import "./styles/tokens_list.css";
 
 const TokensList = ({ addresses }) => {
-    return (
+    return (    
         <div className="list">
             {
                 addresses.map((address) => (

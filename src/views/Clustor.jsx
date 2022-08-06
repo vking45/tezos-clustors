@@ -4,7 +4,7 @@ import "./styles/clustor.css";
 import {useParams} from "react-router-dom";
 
 
-import {fetchStorage, fetchSupply, fetchLocked} from "../utils/tzkt"
+import {fetchStorage, fetchSupply, fetchLocked,  fetchTokenMetaData} from "../utils/tzkt"
 import {initOperation, issueOperation, redeemOperation, lockOperation, unlockOperation, approveOperation, flashOperation} from "../utils/operations"
 
 const TokensList = lazy(() => import("../components/TokensList"));
@@ -35,7 +35,8 @@ const Clustor = () => {
             const tokenMap = await storage.tokens;
             
             for (const token in tokenMap) {
-                ListAddresses.push({address : token, value : tokenMap[token]});           
+                let decimals = await fetchTokenMetaData(token);
+                ListAddresses.push({address : token, value : (tokenMap[token] / Math.pow(10, decimals))});           
             }      
 
             setTotalSupply(supply);
@@ -163,8 +164,7 @@ const Clustor = () => {
             <div className="columns-wrapper">
               <div className="lists-container">
                   <h3 className="list-header">Token List</h3>
-                  <span className="cluster-list-subtext">Please note that the token values are without the decimals, <br />
-                                                         in order to get the values in general standard - divide the values by respective token decimals.                
+                  <span className="cluster-list-subtext"> Please confirm the amount at the time of signing the transaction <br />               
                  </span>
                   <TokensList addresses={ListAddresses} />
                   
