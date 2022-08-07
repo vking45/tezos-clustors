@@ -35,8 +35,8 @@ const Clustor = () => {
             const tokenMap = await storage.tokens;
             
             for (const token in tokenMap) {
-                let decimals = await fetchTokenMetaData(token);
-                ListAddresses.push({address : token, value : (tokenMap[token] / Math.pow(10, decimals))});           
+                let metadata = await fetchTokenMetaData(token);
+                ListAddresses.push({address : metadata.sym + " - " + token, value : (tokenMap[token] / Math.pow(10, metadata.dec))});           
             }      
 
             setTotalSupply(supply);
