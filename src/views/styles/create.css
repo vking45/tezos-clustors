@@ -1,57 +1,28 @@
-.home-root {
-    height: 93vh;
-    background-image: 
-        url("../../assets/bg_clusters.jpg");
-    background-size: cover;
-    background-attachment: scroll;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+.wrapper{
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #051621;
+  margin: 0;
+  padding: 0;
 }
-
-.hero-body {
+p {
+  margin: auto;
+  font-weight: 400;
+  font-size: 20px;
+  margin: auto 5vh auto 15vh;
+  color: #eee;
+}
+article {
+    margin:auto;
+    width: 100%;
+    max-width: 900px;
+    height: 50vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1.5em;
-    width: min(100% - 2rem, 60%);
-    margin-inline: auto;
-    height: 100%;
-}
-
-.hero-header {
-    margin: 0;  
-    font-weight: 700;
-    font-size: 4.656vw;
-    line-height: 80px;
-    letter-spacing: 0.095em;
-    text-align: center;
-    text-transform: uppercase;
-    color: #deb992;
-}
-
-.hero-subtext {
-    margin: 0;
-    color: #FFFFFF;
-    font-weight: 400;
-    font-size: 1.4em;
-    line-height: 28px;
-    text-align: justify;
-}
-
-.lists-container {
-    height: 70vh;
-    width: min(100% - 2rem, 60%);
-    margin-inline: auto;
-}
-
-.lists-header {
-    margin: 0;  
-    font-weight: 500;
-    font-size: 2.5vw;
-    line-height: 80px;
-    letter-spacing: 0.03em;
-    text-align: center;
-    padding-right: 2rem;
-    color: #deb992;
 }
 
 .button-29 {
@@ -100,6 +71,15 @@
   transform: translateY(2px);
 } 
 
-.create-div{
-  text-align: center;
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  margin: 3px;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-90deg);
 }

@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+.sticky {
+  width:100%;
+  padding:20px;
+  padding-bottom:16px;
+  background: #0D2231;
+  color:white;
+  font-weight:bold;
+  font-size:14px;
+  text-align:center;
+  position:fixed;    
+  bottom:0;          
+  left:0;            
+  transition:.33s linear;
+}
+
+.sticky:hover {
+  background:black;
+}

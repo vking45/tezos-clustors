@@ -36,7 +36,7 @@ const Clustor = () => {
             
             for (const token in tokenMap) {
                 let metadata = await fetchTokenMetaData(token);
-                ListAddresses.push({address : metadata.sym + " - " + token, value : (tokenMap[token] / Math.pow(10, metadata.dec))});           
+                ListAddresses.push({sym : metadata.sym, address : token, value : (tokenMap[token] / Math.pow(10, metadata.dec)), raw_value : tokenMap[token]});           
             }      
 
             setTotalSupply(supply);
@@ -125,7 +125,7 @@ const Clustor = () => {
         try {
           setLoading(true);
           for(const i in ListAddresses){
-                await approveOperation(ListAddresses[i].address, address , ListAddresses[i].value * amount);
+                await approveOperation(ListAddresses[i].address, address , ListAddresses[i].raw_value * amount );
                 alert("Transaction succesful!");
            }
         } catch (err) {
@@ -164,8 +164,6 @@ const Clustor = () => {
             <div className="columns-wrapper">
               <div className="lists-container">
                   <h3 className="list-header">Token List</h3>
-                  <span className="cluster-list-subtext"> Please confirm the amount at the time of signing the transaction <br />               
-                 </span>
                   <TokensList addresses={ListAddresses} />
                   
                   <div className="list-form">
@@ -189,7 +187,7 @@ const Clustor = () => {
               <div className="flash-loan-container">
                 <div className="flash-loan-header">
                   <h3 className="flash-loan-title">Flash Loan</h3>
-                    <span className="flash-subtext"> **Make sure that the tokens are pre-approved for the flash loan.<br />                
+                    <span className="flash-subtext"> **Make sure that the tokens are pre-approved for the flash loan and include decimal zeroes in the amount.<br />                
                      </span>
                 </div>
 

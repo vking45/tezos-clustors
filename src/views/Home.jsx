@@ -48,6 +48,9 @@ const Home = () => {
       </div>
       <div className="lists-container">
         <h2 className="lists-header">{loading ? "Please Wait" : "Browse Clustors"}</h2>
+        <div className="create-div">            
+            <a class="button-29" href='/clustors/create/'>CREATE</a>
+        </div>
         <List listTitles={ListTitles}/>
       </div>
     </div>
