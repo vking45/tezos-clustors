@@ -175,10 +175,14 @@ const Clustor = () => {
                      </span>
     
                     <div className="cluster-buttons">
-                        <button className="btn" onClick={onIssue}>{loading ? "Loading.." : "Issue"}</button>
-                        <button className="btn" onClick={onRedeem}>{loading ? "Loading.." : "Redeem"}</button>
-                        <button className="btn" onClick={onLock}>{loading ? "Loading.." : "Lock"}</button>
-                        <button className="btn" onClick={onUnlock}>{loading ? "Loading.." : "Unlock"}</button>
+                      <div className="issue-redeem">
+                        <button className="btn" onClick={onIssue} id="b1">{loading ? "Loading.." : "Issue"}</button>
+                        <button className="btn" onClick={onRedeem} id="b2">{loading ? "Loading.." : "Redeem"}</button>
+                      </div> <br/>
+                      <div className="lock-unlock">
+                        <button className="btn" onClick={onLock} id="b3">{loading ? "Loading.." : "Lock"}</button>
+                        <button className="btn" onClick={onUnlock} id="b4">{loading ? "Loading.." : "Unlock"}</button>
+                      </div> <br />
                         <button className="btn" onClick={onApprove}>{loading ? "Loading.." : "Approve"}</button>
                     </div>
                   </div>
