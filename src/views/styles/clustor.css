@@ -53,9 +53,51 @@
 }
 
 .cluster-buttons {
-    display: flex;
+  /*  display: flex; */
     justify-content: space-between;
     margin-bottom: 2em;
+    text-align: center;
+}
+
+.issue-redeem {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.issue-redeem button{
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+#b1 {
+    float: left;
+}
+
+#b2 {
+    float: right;
+}
+
+.issue-redeem::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+
+#b3 {
+    float: left;
+    margin-left: 80px;
+}
+
+#b4 {
+    float: right;
+    margin-right: 80px;
+}
+
+.lock-unlock::after {
+    content: "";
+    clear: both;
+    display: table;
 }
 
 .btn {
@@ -77,7 +119,7 @@
     color: #deb992;
     font-size: 0.8em;
     text-align: left;
-    margin: 0;
+    margin-bottom: 5px;
 }
 
 .footer-text {
@@ -93,7 +135,7 @@
 .flash-loan-title {
     color: #deb992;
     font-size: 1.5vw;
-    margin: 0%;
+    margin-bottom: 8px;
     text-decoration: underline;
 }
 
@@ -103,7 +145,11 @@
 }
 
 input {
-    width: 100%;
+    width:97.5%;
+    border: 3px solid lightblue;
+    background-color: lightblue;
+    border-radius: 5px;
+    margin-top: 5px;
 }
 
 .execute-btn {
