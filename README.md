@@ -26,8 +26,8 @@ Apart from flash loans, the clustors allows users to have peace of mind by not w
 
 ##### Specific Track : DeFi - Disrupt all things (but can be considered as anything to be honest)
 
-#### Project Repo : [Gitopia]()
+#### Project Repo : [Gitopia](https://gitopia.com/gitopia1ckt4tjg3d8sw2rw3029jjlu79q3xpe23jf5pyf/tezos-clustors)
 
-#### Demo Video : [YouTube]()
+#### Demo Video : [YouTube](https://youtu.be/z2PKrpYB_xE)
 
 #### Problem Statement : [Drive](https://docs.google.com/file/d/1Z7UVKLy0VowOCAzPp2onY7EqPf8fb_Tu/edit?usp=docslist_api&filetype=msword)
