@@ -1,4 +1,5 @@
 # Team Name - Vanguard
+##### Deployed Jakartanet Address - KT1G9kF5QpFw3g2MskqyD9r6kFEgvg7z6FvS
 
 #### Name of Team Members - 
 [Vraj](https://twitter.com/notdguynxtdoor?t=avGTPjKqFMZIyLPaPegRAA&s=08) <br/>
