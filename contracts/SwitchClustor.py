@@ -248,6 +248,7 @@ class SwitchClustorFA12(sp.Contract):
 
     @sp.entry_point
     def approve_tokens(self, params):
+        sp.verify(sp.sender == self.data.creator, message="Only the creator can approve the tokens")
         sp.set_type(params.token_address, sp.TAddress)
         sp.set_type(params.contract_address, sp.TAddress)
         sp.set_type(params.value, sp.TNat)
