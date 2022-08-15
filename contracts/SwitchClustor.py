@@ -250,7 +250,6 @@ class SwitchClustorFA12(sp.Contract):
     def approve_tokens(self, params):
         sp.verify(sp.sender == self.data.creator, message="Only the creator can approve the tokens")
         sp.set_type(params.token_address, sp.TAddress)
-        sp.set_type(params.contract_address, sp.TAddress)
         sp.set_type(params.value, sp.TNat)
         approve_handler = sp.contract(
                             sp.TRecord(spender = sp.TAddress, value = sp.TNat).layout(("spender", "value")),
@@ -258,7 +257,7 @@ class SwitchClustorFA12(sp.Contract):
                             entry_point="approve",
                             ).open_some()
         sp.transfer(sp.record(
-                            spender=params.contract_address,
+                            spender=self.data.plentySwapAddress,
                             value=params.value
                             ),
                             sp.mutez(0),
