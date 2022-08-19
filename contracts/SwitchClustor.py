@@ -247,21 +247,60 @@ class SwitchClustorFA12(sp.Contract):
         self.data.t2amt = t2Balance / self.data.clustorSupply  
 
     @sp.entry_point
-    def approve_tokens(self, params):
+    def approve_token1(self):
         sp.verify(sp.sender == self.data.creator, message="Only the creator can approve the tokens")
-        sp.set_type(params.token_address, sp.TAddress)
-        sp.set_type(params.value, sp.TNat)
         approve_handler = sp.contract(
                             sp.TRecord(spender = sp.TAddress, value = sp.TNat).layout(("spender", "value")),
-                            address=params.token_address,
+                            address=self.data.t1,
                             entry_point="approve",
                             ).open_some()
         sp.transfer(sp.record(
                             spender=self.data.plentySwapAddress,
-                            value=params.value
+                            value=self.data.t1amt * self.data.clustorSupply
                             ),
                             sp.mutez(0),
                             approve_handler)
+
+    @sp.entry_point
+    def approve_token2(self):
+        sp.verify(sp.sender == self.data.creator, message="Only the creator can approve the tokens")
+        approve_handler = sp.contract(
+                            sp.TRecord(spender = sp.TAddress, value = sp.TNat).layout(("spender", "value")),
+                            address=self.data.t2,
+                            entry_point="approve",
+                            ).open_some()
+        sp.transfer(sp.record(
+                            spender=self.data.plentySwapAddress,
+                            value=self.data.t2amt * self.data.clustorSupply
+                            ),
+                            sp.mutez(0),
+                            approve_handler)
+
+    @sp.entry_point
+    def reset_approves(self):
+        sp.verify(sp.sender == self.data.creator, message="Only the creator can call this")
+        approve_handler1 = sp.contract(
+                            sp.TRecord(spender = sp.TAddress, value = sp.TNat).layout(("spender", "value")),
+                            address=self.data.t1,
+                            entry_point="approve",
+                            ).open_some()
+        sp.transfer(sp.record(
+                            spender=self.data.plentySwapAddress,
+                            value=sp.nat(0)
+                            ),
+                            sp.mutez(0),
+                            approve_handler1)
+        approve_handler2 = sp.contract(
+                            sp.TRecord(spender = sp.TAddress, value = sp.TNat).layout(("spender", "value")),
+                            address=self.data.t2,
+                            entry_point="approve",
+                            ).open_some()
+        sp.transfer(sp.record(
+                            spender=self.data.plentySwapAddress,
+                            value=sp.nat(0)
+                            ),
+                            sp.mutez(0),
+                            approve_handler2)
           
 
     @sp.add_test(name = "Clustor")
