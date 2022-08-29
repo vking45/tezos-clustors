@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { BrowserRouter as Router, Route, Routes, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 const Home = lazy(() => import("./views/Home"));
 const Navbar = lazy(() => import("./components/Navbar"));
 const Clustor = lazy(() => import("./views/Clustor"));
