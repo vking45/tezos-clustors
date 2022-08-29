@@ -12,10 +12,9 @@ const App = () => {
       <Router> 
         <Navbar />
         <Routes>
-          <Switch>
           <Route path="/" element={<Home />} /> 
           <Route path="/clustors/:address" element={<Clustor />} />
-          </Switch>
+          <Route path="/clustors/create/" element={<Create />} />
         </Routes>
       </Router>
         <Footer />

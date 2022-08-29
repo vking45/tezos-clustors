@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {connectWallet, getAccount} from "../utils/wallet";
-import { Link } from 'react-router-dom';
  
 const Navbar = () => {
     
@@ -27,8 +26,8 @@ const Navbar = () => {
       <span className="text-3xl font-bold text-rex -ml-3 cursor-pointer">LUSTORS</span>
     </a>
     <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
-      <Link to="/clustor"  className="mr-6 text-xl hover:text-gray-900 cursor-pointer mb-3 sm:mb-3">Browse Clustors & Flash Loan</Link>
-      <Link to="/create" className="mr-6 text-xl hover:text-gray-900 cursor-pointer mb-3 sm:mb-3">Create Clustor</Link>
+      <a href="{'/clustors/${clustor.address}/'}"  className="mr-6 text-xl hover:text-gray-900 cursor-pointer mb-3 sm:mb-3">Browse Clustors & Flash Loan</a>
+      <a href="/clustors/create" className="mr-6 text-xl hover:text-gray-900 cursor-pointer mb-3 sm:mb-3">Create Clustor</a>
     </nav>
     <button className="inline-flex text-white bg-cex border-0 py-2 px-6 focus:outline-none hover:bg-rex rounded text-lg hover:shadow-lg font-medium transition transform hover:-translate-y-0.5"onClick={onConnectWallet}>
       {account ? account : "Connect Wallet"}
