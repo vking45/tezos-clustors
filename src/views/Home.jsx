@@ -1,34 +1,6 @@
-import { lazy } from "react";
 import heroImg from "../assets/bg.jpg";
-import { useState, useEffect } from "react";
-
-import {fetchClustors, fetchClustorName} from "../utils/tzkt";
-
-const List = lazy(() => import("../components/List")); 
-
-let ListTitles = [];
 
 const Home = () => {
-    
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        (async () => {
-            const clustorList = await fetchClustors();
-            for (const i in clustorList){
-                let clustorName = await fetchClustorName(clustorList[i]);
-                ListTitles.push({address: clustorList[i], cname: clustorName});            
-            }
-            setLoading(false);                  
-        })(); 
-        
-        return () => {
-            setLoading(true);
-            ListTitles = [];
-        }
-       
-    }, []); 
-
   return (
     <main>
     <section className="text-gray-600 body-font-roboto">
@@ -52,7 +24,7 @@ const Home = () => {
 <section className="text-gray-600 body-font">
   <div className="container px-5 py-24 mx-auto">
     <div className="text-center mb-20">
-      <h1 className="sm:text-3xl text-2xl font-medium title-font text-gray-900 mb-4">Clustors provides</h1>
+      <h1 className="sm:text-3xl text-2xl font-medium title-font text-gray-900 mb-4">Features</h1>
       <div className="flex mt-6 justify-center">
         <div className="w-16 h-1 rounded-full bg-cex inline-flex"></div>
       </div>

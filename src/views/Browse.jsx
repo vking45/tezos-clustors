@@ -1,12 +1,16 @@
-import {fetchClustors, fetchClustorName} from "../utils/tzkt";
-import { useState, useEffect } from "react";
 import { lazy } from "react";
-import React from "react";
-const List = lazy(() => import("../components/List"));
-const Broswe = () => {
-  let ListTitles = [];
 
-const [loading, setLoading] = useState(true);
+import { useState, useEffect } from "react";
+
+import {fetchClustors, fetchClustorName} from "../utils/tzkt";
+
+const List = lazy(() => import("../components/List")); 
+
+let ListTitles = [];
+
+const Browse = () => {
+    
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         (async () => {
@@ -24,10 +28,11 @@ const [loading, setLoading] = useState(true);
         }
        
     }, []); 
-
-  return ( 
-    <List listTitles={ListTitles}/>
-   );
-}
+  return(
+   <section>
+    <List listTitles={ListTitles}/>   
+   </section>  
+  );
+};
  
-export default Broswe;
+export default Browse;
