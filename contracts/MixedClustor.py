@@ -14,6 +14,7 @@ class MixedClustor(sp.Contract):
         self.init(
             creator = creator,
             clustorName = clustorName,
+            cRewards = sp.mutez(0),
             tokens = tokens,
             fa2tokens = fa2tokens,
             clustorInited = False,
@@ -119,7 +120,9 @@ class MixedClustor(sp.Contract):
 
     @sp.entry_point
     def issueToken(self, amount : sp.TNat):
+        sp.verify(sp.amount >= sp.mutez(50000), message="Please send a minimum amount of 0.05 XTZ for issuing a clustor")
         sp.verify(self.data.clustorInited == True, message="The clustor must be inited for issuing a clustor token")
+        self.data.cRewards += sp.amount
         sp.verify(amount > 0, message="Please enter a valid amount of tokens")
         token_keys = self.data.tokens.keys()
         sp.for i in token_keys:
@@ -141,6 +144,8 @@ class MixedClustor(sp.Contract):
 
     @sp.entry_point
     def redeemToken(self, amount : sp.TNat):
+        sp.verify(sp.amount >= sp.mutez(100000), message="Please send a minimum amount of 0.1 XTZ for redeeming a clustor")
+        self.data.cRewards += sp.amount
         sp.verify(self.data.clustorInited == True, message="The clustor must be inited for redeeming a clustor token")              
         sp.verify(amount > 0, message="Please enter a valid amount of tokens")
         clustor_burn_handler = sp.contract(
@@ -215,9 +220,10 @@ class MixedClustor(sp.Contract):
     @sp.entry_point
     def flashLoan(self, params):
         sp.set_type(params, sp.TRecord(amount=sp.TNat, token_address=sp.TAddress , receiver_contract=sp.TAddress, fa2=sp.TBool, token_id=sp.TNat))
+        sp.verify(params.amount > 0, message="Please enter a non-zero amount")
         sp.verify(self.data.tokens.contains(params.token_address) | self.data.fa2tokens.contains(params.token_address), message="There is no such token in this contract")
         sp.verify(self.data.clustorInited == True, message="This can be only executed after the clustor tokens are inited")
-        sp.verify(sp.amount >= sp.mutez(1000000), message="Please send a minimum amount of tez for executing the flash loan")
+        sp.verify(sp.amount >= sp.mutez(2000000), message="Please send a minimum amount of tez for executing the flash loan")
 
         sp.if params.fa2 == True:
             sp.verify(params.amount < sp.snd(self.data.fa2tokens[params.token_address]) * self.data.lockedClustors, message="The contract doesn't have enough token balance")
@@ -297,6 +303,13 @@ class MixedClustor(sp.Contract):
         sp.for i in reward_keys:
             self.data.lockedRewards[i] += rewards * self.data.lockedBalances[i]
 
+    @sp.entry_point
+    def claimFees(self):
+        sp.verify(sp.sender == self.data.creator, message="Only creator can claim the fees")
+        sp.verify(self.data.clustorInited == True, message="The clustor must be inited for issuing a clustor token")
+        sp.verify(self.data.cRewards > sp.mutez(0), message="There is nothing to be claimed")
+        sp.send(self.data.creator, self.data.cRewards)
+        self.data.cRewards = sp.mutez(0)
 
     """
         Testing Scenarios 
@@ -354,11 +367,11 @@ class MixedClustor(sp.Contract):
         scenario += f2t1.update_operators([sp.variant("add_operator", f2t1.operator_param.make(owner=alice.address, operator=c.address, token_id=0))]).run(sender=alice.address)
 
         scenario.h1("Issuing")
-        scenario += c.issueToken(sp.nat(4)).run(sender=bob.address)
-        scenario += c.issueToken(sp.nat(2)).run(sender=alice.address)
+        scenario += c.issueToken(sp.nat(4)).run(sender=bob.address, amount=sp.mutez(50000))
+        scenario += c.issueToken(sp.nat(2)).run(sender=alice.address, amount=sp.mutez(50000))
         scenario += c.issueToken(sp.nat(10)).run(sender=alice.address, valid=False)
         scenario.h1("Redeeming")
-        scenario += c.redeemToken(sp.nat(1)).run(sender=bob.address)
+        scenario += c.redeemToken(sp.nat(1)).run(sender=bob.address, amount=sp.mutez(100000))
         scenario += c.redeemToken(sp.nat(8)).run(sender=alice.address, valid=False)
         scenario.h1("Locking & Unlocking")
         scenario += c.lockClustors(sp.nat(10)).run(sender=alice.address, valid=False)
@@ -369,10 +382,12 @@ class MixedClustor(sp.Contract):
         flash = FLASH.FlashDummy()
         scenario += flash
         scenario += f2t1.update_operators([sp.variant("add_operator", f2t1.operator_param.make(owner=flash.address, operator=c.address, token_id=0))]).run(sender=flash.address)
-        scenario += c.flashLoan(sp.record(amount=1, token_address=f2t1.address, receiver_contract=flash.address, token_id=0, fa2=True)).run(sender=admin.address, amount=sp.tez(1))
+        scenario += c.flashLoan(sp.record(amount=1, token_address=f2t1.address, receiver_contract=flash.address, token_id=0, fa2=True)).run(sender=admin.address, amount=sp.tez(2))
         scenario += t1.approve(spender=c.address, value=10).run(sender=flash.address)
         scenario += c.flashLoan(sp.record(amount=10, token_address=t1.address, receiver_contract=flash.address, token_id=0, fa2=False)).run(sender=admin.address, amount=sp.tez(1), valid=False)
-        scenario += c.flashLoan(sp.record(amount=2, token_address=t1.address, receiver_contract=flash.address, token_id=0, fa2=False)).run(sender=admin.address, amount=sp.tez(1))
+        scenario += c.flashLoan(sp.record(amount=2, token_address=t1.address, receiver_contract=flash.address, token_id=0, fa2=False)).run(sender=admin.address, amount=sp.tez(2))
         scenario += c.unlockClustors(2).run(sender=alice.address)
         scenario += c.unlockClustors(sp.nat(1)).run(sender=bob.address)
-
+        scenario += c.claimFees().run(sender=bob.address, valid=False)
+        scenario += c.claimFees().run(sender=admin.address)
+        scenario += c.unlockClustors(1).run(sender=bob.address)
