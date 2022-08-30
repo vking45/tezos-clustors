@@ -1,5 +1,5 @@
 import React from 'react'
-const List = lazy(() => import("./components/List"));
+const List = lazy(() => import("../components/List"));
 
 function Browse() {
   return (
@@ -7,4 +7,4 @@ function Browse() {
   )
 }
 
-export default Browse
+export default Browse;
