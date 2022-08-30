@@ -1,5 +1,4 @@
 
-
 const List = ({ listTitles }) => {
     return (
         <div className="list">

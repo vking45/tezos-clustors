@@ -10,7 +10,7 @@ const Create = () => {
                         that are to be included in the clustors. <br /> <br />
                        We will address this concern and make tokens searchable in the upcoming updates.
 </p>
-      <span className="inline-block h-1 w-10 rounded bg-blue-500 mt-8 mb-6"></span>
+      <span className="inline-block h-1 w-10 rounded bg-cex mt-8 mb-6"></span>
       <div className="p-2 w-full">
           <button className="flex mx-auto text-white bg-cex border-0 py-2 px-8 focus:outline-none hover:bg-rex rounded text-lg" >
           <a href="https://better-call.dev/jakartanet/KT1G9kF5QpFw3g2MskqyD9r6kFEgvg7z6FvS/interact/createClustor/">Create</a>
