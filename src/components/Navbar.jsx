@@ -27,7 +27,7 @@ const Navbar = () => {
       <span className="text-3xl font-bold text-rex -ml-3 cursor-pointer">LUSTORS</span>
     </a>
     <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
-      <a href="{'/clustors/${clustor.address}/'}"  className="mr-6 text-xl hover:text-gray-900 cursor-pointer mb-3 sm:mb-3">Browse</a>
+      <a href="{'/clustors/browse/${clustor.address}/'}"  className="mr-6 text-xl hover:text-gray-900 cursor-pointer mb-3 sm:mb-3">Browse</a>
       <a href="/clustors/create" className="mr-6 text-xl hover:text-gray-900 cursor-pointer mb-3 sm:mb-3">Create Clustor</a>
     </nav>
     <button className="inline-flex text-white bg-cex border-0 mb-2 py-2 px-6 focus:outline-none hover:bg-rex rounded text-lg hover:shadow-lg font-medium transition transform hover:-translate-y-0.5"onClick={onConnectWallet}>
