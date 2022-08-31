@@ -1,5 +1,6 @@
 import heroImg from "../assets/bg.jpg";
 
+
 const Home = () => {
   return (
     <main>
