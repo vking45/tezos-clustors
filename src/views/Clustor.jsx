@@ -147,76 +147,30 @@ const Clustor = () => {
 
 
     return (
-        <div className="cluster-container">
-            <div className="cluster-header">
-                <h2 className="cluster-title">{name}</h2>
-                {clustorStatus ? 
-                <div className="supply-wrapper">
-                    <h2 className="cluster-supply">{"Clustor Supply : " + totalSupply}</h2>
-                    <span className="cluster-list-subtext"><b>{"Clustor Address : " + ctokenAddress}</b></span><br/>
-                    <span className="cluster-list-subtext">Add this token address to your respective wallets</span>
-                </div>                
-                : 
-                    <button className="button-29" onClick={onInit}>{loading ? "Loading..." : "Initialize"}</button>
-                }
+        <div className="">
+           <h1 className="mb-4 text-3xl flex justify-center align-middle font-extrabold tracking-tight leading-none text-gray-900 md:text-2xl lg:text-4xl dark:text-gray">{name}</h1>
+          {clustorStatus ?
+            <div className="wrapper">
+            <h3 className="mb-4 text-2xl flex justify-center align-middle font-bold tracking-tight leading-none text-gray-800 md:text-xl lg:text-4xl">{"Clustor Supply : " + totalSupply}</h3>
+            <span className="mb-2 text-lg flex justify-center align-middle font-normal text-gray-600 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-600">{"Clustor Address : " + ctokenAddress}</span>
+            <span className="mb-6 text-lg flex justify-center align-middle font-normal text-gray-600 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-600">Add this token address to your respective wallets</span>
+          </div>
+          :
+            <button className="py-2.5 px-5 mr-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center" onClick={onInit}>{loading ? "Loading...":"Initialize"}
+            </button>
+          }
+        
+          <div className="flex flex-row justify-start">
+
+            <div className="w-1/2">
+              <h3 className="mb-4 text-2xl font-bold tracking-tight leading-none text-gray-800 md:text-xl lg:text-4xl">Token List</h3>
+              <TokensList addresses={ListAddresses} />
+                <div className="list-form">
+                  <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="number" min="1" value={amount} name="input-amount" id="input-amount" onChange={(e) => setAmount(e.target.value)} />
+                  <p id="helper-text-explanation" className="mt-2 text-sm text-gray-500 dark:text-gray-400">**You need to first approve the tokens for issuing new clustors.</p>
+                </div>
             </div>
-            <div className="columns-wrapper">
-              <div className="lists-container">
-                  <h3 className="list-header">Token List</h3>
-                  <TokensList addresses={ListAddresses} />
-                  
-                  <div className="list-form">
-                    <div className="list-input">
-                      <input type="number" min="1" value={amount} name="input-amount" id="input-amount" onChange={(e) => setAmount(e.target.value)} />
-                    </div>
-
-                    <span className="cluster-list-subtext"> **You need to first approve the tokens for issuing new clustors.                 
-                     </span>
-    
-                    <div className="cluster-buttons">
-                      <div className="issue-redeem">
-                        <button className="btn" onClick={onIssue} id="b1">{loading ? "Loading.." : "Issue"}</button>
-                        <button className="btn" onClick={onRedeem} id="b2">{loading ? "Loading.." : "Redeem"}</button>
-                      </div> <br/>
-                      <div className="lock-unlock">
-                        <button className="btn" onClick={onLock} id="b3">{loading ? "Loading.." : "Lock"}</button>
-                        <button className="btn" onClick={onUnlock} id="b4">{loading ? "Loading.." : "Unlock"}</button>
-                      </div> <br />
-                        <button className="btn" onClick={onApprove}>{loading ? "Loading.." : "Approve"}</button>
-                    </div>
-                  </div>
-              </div>
-
-              <div className="flash-loan-container">
-                <div className="flash-loan-header">
-                  <h3 className="flash-loan-title">Flash Loan</h3>
-                    <span className="flash-subtext"> **Make sure that the tokens are pre-approved for the flash loan and include decimal zeroes in the amount.<br />                
-                     </span>
-                </div>
-
-                <div className="flash-loan-form">
-                  <label htmlFor="token-address">Token Address</label><br />
-                  <input type="text" name="token-address" id="token-address" onChange={(e) => setTokenFlash(e.target.value)} /> <br />
-                  <label htmlFor="contract-address">Contract Address</label><br />
-                  <input type="text" name="contract-address" id="contract-address" onChange={(e) => setFlashAddress(e.target.value)} /> <br />
-                  <label htmlFor="amount">Amount: </label><br />
-                  <input type="number" min="1" name="flash-amount" id="flash-amount" onChange={(e) => setFlashAmount(e.target.value)} />
-                </div>
-
-                <div className="flash-loan-footer">
-                  <p className="footer-text">{"Total Locked Clustors : " + lockedClustors}</p>
-                   <div className="lash-subtext">
-                    <span className="flash-subtext"> **The entry-point of the flash loan contract should be named - "execute_operation".                 
-                     </span>
-                   </div>
-                </div>
-
-                <button className="btn execute-btn" onClick={onFlash}>{loading ? "Loading.." : "Execute"}</button>
-              </div>
-            </div>
-            
-            
-            
+          </div>
         </div>
     );
 };

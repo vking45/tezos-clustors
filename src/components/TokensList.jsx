@@ -3,9 +3,9 @@ const TokensList = ({ addresses }) => {
         <div className="list">
             {
                 addresses.map((address) => (
-                    <div className="token-element" key={address.address}>
-                        <h4 className="address">{ address.sym + " - " + address.address }</h4>
-                        <p className="address-value">{ address.value }</p>
+                    <div className="flex flex-row justify-between align-middle text-white bg-blue-100 rounded-sm mt-2 w-1/2 overflow-hidden" key={address.address}>
+                        <h4 className="font-light font-sm text-gray-700 m-2">{ address.sym + " - " + address.address }</h4>
+                        <p className="font-light font-sm text-gray-700 m-2">{ address.value }</p>
                     </div>
                 ))
             } 
