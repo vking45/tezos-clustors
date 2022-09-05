@@ -8,7 +8,7 @@ class MixedClustor(sp.Contract):
         self, 
         creator : sp.TAddress, 
         tokens : sp.TMap(sp.TAddress, sp.TNat),
-        fa2tokens : sp.TMap(sp.TAddress, sp.TPair(sp.TNat, sp.TNat)), # In the pair first element represents the token_id and the second element is the token value in each clustor.
+        fa2tokens : sp.TMap(sp.TAddress, sp.TMap(sp.TNat, sp.TNat)), # In the pair first element represents the token_id and the second element is the token value in each clustor.
         clustorName : sp.TString
         ):
         self.init(
@@ -129,7 +129,9 @@ class MixedClustor(sp.Contract):
             self.TransferFATokens(sp.record(amount=self.data.tokens[i] * amount , tokenAddress=i, repay=sp.bool(False)))
         fa2_keys = self.data.fa2tokens.keys()
         sp.for j in fa2_keys:
-            self.TransferFATwoTokens(sp.record(amount=sp.snd(self.data.fa2tokens[j])*amount, tokenAddress=j, id=sp.fst(self.data.fa2tokens[j]), repay=False))
+            inner_keys = self.data.fa2tokens[j].keys()
+            sp.for k in inner_keys:
+                self.TransferFATwoTokens(sp.record(amount=self.data.fa2tokens[j][k]*amount, tokenAddress=j, id=k, repay=False))
         clustor_token_handler = sp.contract(
                             sp.TRecord(address=sp.TAddress,value=sp.TNat),
                             address=self.data.clustorToken,
@@ -164,7 +166,9 @@ class MixedClustor(sp.Contract):
             self.TransferFATokens(sp.record(amount=self.data.tokens[i] * amount , tokenAddress=i, repay=sp.bool(True)))
         fa2_keys = self.data.fa2tokens.keys()
         sp.for j in fa2_keys:
-            self.TransferFATwoTokens(sp.record(amount=sp.snd(self.data.fa2tokens[j])*amount, tokenAddress=j, id=sp.fst(self.data.fa2tokens[j]), repay=True))
+            inner_keys = self.data.fa2tokens[j].keys()
+            sp.for k in inner_keys:
+                self.TransferFATwoTokens(sp.record(amount=self.data.fa2tokens[j][k]*amount, tokenAddress=j, id=k, repay=True))
 
 
     @sp.entry_point
@@ -221,12 +225,11 @@ class MixedClustor(sp.Contract):
     def flashLoan(self, params):
         sp.set_type(params, sp.TRecord(amount=sp.TNat, token_address=sp.TAddress , receiver_contract=sp.TAddress, fa2=sp.TBool, token_id=sp.TNat))
         sp.verify(params.amount > 0, message="Please enter a non-zero amount")
-        sp.verify(self.data.tokens.contains(params.token_address) | self.data.fa2tokens.contains(params.token_address), message="There is no such token in this contract")
         sp.verify(self.data.clustorInited == True, message="This can be only executed after the clustor tokens are inited")
         sp.verify(sp.amount >= sp.mutez(2000000), message="Please send a minimum amount of tez for executing the flash loan")
 
         sp.if params.fa2 == True:
-            sp.verify(params.amount < sp.snd(self.data.fa2tokens[params.token_address]) * self.data.lockedClustors, message="The contract doesn't have enough token balance")
+            sp.verify(params.amount < self.data.fa2tokens[params.token_address][params.token_id] * self.data.lockedClustors, message="The contract doesn't have enough token balance")
             arg = [
                 sp.record(
                     from_ = sp.self_address,
@@ -268,6 +271,7 @@ class MixedClustor(sp.Contract):
                 entry_point='transfer').open_some()
             sp.transfer(arg, sp.mutez(0), transferHandle)
         sp.else:
+            sp.verify(self.data.tokens.contains(params.token_address), message="There is no such token in this contract")
             sp.verify(params.amount < self.data.tokens[params.token_address] * self.data.lockedClustors, message="The contract doesn't have enough token balance")
             c_pool = sp.contract(
                 sp.TRecord(from_=sp.TAddress, to_=sp.TAddress, value=sp.TNat).layout(("from_ as from", ("to_ as to", "value"))),
@@ -338,33 +342,50 @@ class MixedClustor(sp.Contract):
         t1 = FA12.FA12(alice.address, config=FA12.FA12_config(), token_metadata = test_metadata)
         t2 = FA12.FA12(alice.address, config=FA12.FA12_config(), token_metadata = test_metadata2) 
         f2t1 = FA2.FA2(admin=alice.address, config=FA2.FA2_config(),metadata = sp.utils.metadata_of_url("https://example.com"))
+        f2t2 = FA2.FA2(admin=alice.address, config=FA2.FA2_config(),metadata = sp.utils.metadata_of_url("https://example.com"))
 
         scenario += t1
         scenario += t2
         scenario += f2t1
+        scenario += f2t2
 
         example_md = FA2.FA2.make_metadata(
         name     = "Example FA2",
         decimals = 0,
         symbol   = "DFA2" )
 
-        scenario += t1.mint(sp.record(address=bob.address, value=10)).run(sender=alice.address)
-        scenario += t2.mint(sp.record(address=bob.address, value=10)).run(sender=alice.address)
-        scenario += t1.mint(sp.record(address=alice.address, value=10)).run(sender=alice.address)
-        scenario += t2.mint(sp.record(address=alice.address, value=10)).run(sender=alice.address)
-        scenario += f2t1.mint(address=bob.address, amount=10, metadata=example_md, token_id=0).run(sender=alice.address)
-        scenario += f2t1.mint(address=alice.address, amount=10, metadata=example_md, token_id=0).run(sender=alice.address)
+        example_md2 = FA2.FA2.make_metadata(
+        name     = "Example FA2",
+        decimals = 0,
+        symbol   = "DFA2" )
 
-        c = MixedClustor(admin.address, sp.map({t1.address : sp.nat(1), t2.address : sp.nat(1)}), sp.map({f2t1.address : sp.pair(sp.nat(0), sp.nat(1))}) , clustorName="Test-1")
+        scenario += t1.mint(sp.record(address=bob.address, value=10)).run(sender=alice.address, show=False)
+        scenario += t2.mint(sp.record(address=bob.address, value=10)).run(sender=alice.address, show=False)
+        scenario += t1.mint(sp.record(address=alice.address, value=10)).run(sender=alice.address, show=False)
+        scenario += t2.mint(sp.record(address=alice.address, value=10)).run(sender=alice.address, show=False)
+        scenario += f2t1.mint(address=bob.address, amount=10, metadata=example_md, token_id=0).run(sender=alice.address, show=False)
+        scenario += f2t1.mint(address=bob.address, amount=10, metadata=example_md, token_id=1).run(sender=alice.address, show=False)
+        scenario += f2t1.mint(address=alice.address, amount=10, metadata=example_md, token_id=0).run(sender=alice.address, show=False)
+        scenario += f2t1.mint(address=alice.address, amount=10, metadata=example_md, token_id=1).run(sender=alice.address, show=False)
+        scenario += f2t2.mint(address=bob.address, amount=10, metadata=example_md, token_id=0).run(sender=alice.address, show=False)
+        scenario += f2t2.mint(address=bob.address, amount=10, metadata=example_md, token_id=1).run(sender=alice.address, show=False)
+        scenario += f2t2.mint(address=alice.address, amount=10, metadata=example_md, token_id=0).run(sender=alice.address, show=False)
+        scenario += f2t2.mint(address=alice.address, amount=10, metadata=example_md, token_id=1).run(sender=alice.address, show=False)
+
+        c = MixedClustor(admin.address, sp.map({t1.address : sp.nat(1), t2.address : sp.nat(1)}), sp.map({f2t1.address : sp.map({0 : 1, 1 : 1}), f2t2.address : sp.map({0:1})}) , clustorName="Test-1")
         scenario += c
         scenario += c.initClustorToken().run(sender=admin.address)
 
-        scenario += t1.approve(spender=c.address, value=sp.nat(10)).run(sender=bob.address)
-        scenario += t2.approve(spender=c.address, value=sp.nat(10)).run(sender=bob.address)
-        scenario += t1.approve(spender=c.address, value=sp.nat(10)).run(sender=alice.address)
-        scenario += t2.approve(spender=c.address, value=sp.nat(10)).run(sender=alice.address)
-        scenario += f2t1.update_operators([sp.variant("add_operator", f2t1.operator_param.make(owner=bob.address, operator=c.address, token_id=0))]).run(sender=bob.address)
-        scenario += f2t1.update_operators([sp.variant("add_operator", f2t1.operator_param.make(owner=alice.address, operator=c.address, token_id=0))]).run(sender=alice.address)
+        scenario += t1.approve(spender=c.address, value=sp.nat(10)).run(sender=bob.address, show=False)
+        scenario += t2.approve(spender=c.address, value=sp.nat(10)).run(sender=bob.address, show=False)
+        scenario += t1.approve(spender=c.address, value=sp.nat(10)).run(sender=alice.address, show=False)
+        scenario += t2.approve(spender=c.address, value=sp.nat(10)).run(sender=alice.address, show=False)
+        scenario += f2t1.update_operators([sp.variant("add_operator", f2t1.operator_param.make(owner=bob.address, operator=c.address, token_id=0))]).run(sender=bob.address, show=False)
+        scenario += f2t1.update_operators([sp.variant("add_operator", f2t1.operator_param.make(owner=alice.address, operator=c.address, token_id=0))]).run(sender=alice.address, show=False)
+        scenario += f2t1.update_operators([sp.variant("add_operator", f2t1.operator_param.make(owner=bob.address, operator=c.address, token_id=1))]).run(sender=bob.address, show=False)
+        scenario += f2t1.update_operators([sp.variant("add_operator", f2t1.operator_param.make(owner=alice.address, operator=c.address, token_id=1))]).run(sender=alice.address, show=False)
+        scenario += f2t2.update_operators([sp.variant("add_operator", f2t2.operator_param.make(owner=bob.address, operator=c.address, token_id=0))]).run(sender=bob.address, show=False)
+        scenario += f2t2.update_operators([sp.variant("add_operator", f2t2.operator_param.make(owner=alice.address, operator=c.address, token_id=0))]).run(sender=alice.address, show=False)
 
         scenario.h1("Issuing")
         scenario += c.issueToken(sp.nat(4)).run(sender=bob.address, amount=sp.mutez(50000))
@@ -381,9 +402,9 @@ class MixedClustor(sp.Contract):
         scenario.h1("Flash Testing")
         flash = FLASH.FlashDummy()
         scenario += flash
-        scenario += f2t1.update_operators([sp.variant("add_operator", f2t1.operator_param.make(owner=flash.address, operator=c.address, token_id=0))]).run(sender=flash.address)
+        scenario += f2t1.update_operators([sp.variant("add_operator", f2t1.operator_param.make(owner=flash.address, operator=c.address, token_id=0))]).run(sender=flash.address, show=False)
         scenario += c.flashLoan(sp.record(amount=1, token_address=f2t1.address, receiver_contract=flash.address, token_id=0, fa2=True)).run(sender=admin.address, amount=sp.tez(2))
-        scenario += t1.approve(spender=c.address, value=10).run(sender=flash.address)
+        scenario += t1.approve(spender=c.address, value=10).run(sender=flash.address, show=False)
         scenario += c.flashLoan(sp.record(amount=10, token_address=t1.address, receiver_contract=flash.address, token_id=0, fa2=False)).run(sender=admin.address, amount=sp.tez(1), valid=False)
         scenario += c.flashLoan(sp.record(amount=2, token_address=t1.address, receiver_contract=flash.address, token_id=0, fa2=False)).run(sender=admin.address, amount=sp.tez(2))
         scenario += c.unlockClustors(2).run(sender=alice.address)
