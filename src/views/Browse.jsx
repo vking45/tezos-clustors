@@ -29,7 +29,7 @@ const Browse = () => {
        
     }, []); 
   return(
-   <section>
+   <section className="m-auto p-auto h-max">
     <List listTitles={ListTitles}/>   
    </section>  
   );
