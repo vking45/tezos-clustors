@@ -30,25 +30,6 @@ export const redeemOperation = async (contract, amount) => {
   }
 };
 
-export const lockOperation = async (contract, amount) => {
-  try {
-    const contractInstance = await tezos.wallet.at(contract);
-    const op = await contractInstance.methods.lockClustors(amount).send();
-    await op.confirmation(1);
-  } catch (err) {
-    throw err;
-  }
-};
-
-export const unlockOperation = async (contract, amount) => {
-  try {
-    const contractInstance = await tezos.wallet.at(contract);
-    const op = await contractInstance.methods.unlockClustors(amount).send();
-    await op.confirmation(1);
-  } catch (err) {
-    throw err;
-  }
-};
 
 export const approveOperation = async (token_contract, clustor_contract , amount) => {
   try {

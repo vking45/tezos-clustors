@@ -4,7 +4,7 @@ import {useParams} from "react-router-dom";
 
 
 import {fetchStorage, fetchSupply, fetchLocked,  fetchTokenMetaData} from "../utils/tzkt"
-import {initOperation, issueOperation, redeemOperation, lockOperation, unlockOperation, approveOperation, flashOperation} from "../utils/operations"
+import {initOperation, issueOperation, redeemOperation, approveOperation, flashOperation} from "../utils/operations"
 
 const TokensList = lazy(() => import("../components/TokensList"));
 
@@ -94,32 +94,6 @@ const Clustor = () => {
         setTotalSupply(fsupply);     
     }   
 
-    const onLock = async () => {
-        try {
-          setLoading(true);
-          await lockOperation(address, amount);
-          alert("Transaction succesful!");
-        } catch (err) {
-          alert(err.message);
-        }
-        setLoading(false);
-        const locked = await fetchLocked(address);
-        setLockedClustors(locked);        
-    } 
-
-    const onUnlock = async () => {
-        try {
-          setLoading(true);
-          await unlockOperation(address, amount);
-          alert("Transaction succesful!");
-        } catch (err) {
-          alert(err.message);
-        }
-        setLoading(false);
-        const locked = await fetchLocked(address);
-        setLockedClustors(locked);        
-    }
-
     const onApprove = async () => {
         try {
           setLoading(true);
@@ -184,16 +158,6 @@ const Clustor = () => {
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 m-1">
   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
 </svg>{loading ? "Loading.." : "Issue"}
-  </button>
-  <button type="button" className="inline-flex items-center py-2 px-4 text-sm font-medium   text-white bg-cex focus:outline-none hover:bg-rex" onClick={onLock} id="b3">
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 m-1">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-</svg>{loading ? "Loading.." : "Lock"}
-  </button>
-  <button type="button" className="inline-flex items-center py-2 px-4 text-sm font-medium   text-white bg-cex focus:outline-none hover:bg-rex" onClick={onUnlock} id="b4">
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 m-1">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-</svg>{loading ? "Loading.." : "Unlock"}
   </button>
   <button type="button" className="inline-flex items-center py-2 px-4 text-sm font-medium rounded-r-md   text-white bg-cex focus:outline-none hover:bg-rex" onClick={onRedeem} id="b2">
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 m-1">
