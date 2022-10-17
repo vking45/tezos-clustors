@@ -28,8 +28,6 @@ Apart from flash loans, the clustors allows users to have peace of mind by not w
 
 ## Tech Stack : SmartPy, ReactJS, Taquito, Axios, TzKt API...
 
-##### Specific Track : DeFi - Disrupt all things (but can be considered as anything to be honest)
-
 #### Project Repo : [Gitopia](https://gitopia.com/gitopia1ckt4tjg3d8sw2rw3029jjlu79q3xpe23jf5pyf/tezos-clustors)
 
 #### Demo Video : [YouTube](https://youtu.be/z2PKrpYB_xE)
