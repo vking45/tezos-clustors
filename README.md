@@ -1,3 +1,6 @@
+# Winner : Small But Great - DeFi (1st Position)
+#### This repo contains the code and info of the project submitted at the TezAsia Hackathon '22.
+
 # Team Name - Vanguard
 ##### Deployed Jakartanet Address - KT1G9kF5QpFw3g2MskqyD9r6kFEgvg7z6FvS
 
