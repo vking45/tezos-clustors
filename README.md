@@ -1,4 +1,4 @@
-# Winner : Small But Great - DeFi (1st Position)
+# [Winner : Small But Great - DeFi (1st Position)](https://x.com/IndiaTezos/status/1567161425839403010?s=20)
 #### This repo contains the code and info of the project submitted at the TezAsia Hackathon '22.
 
 # Team Name - Vanguard
